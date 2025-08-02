@@ -7,5 +7,8 @@ export default {
   db_uri: process.env.DB_URI,
   port: process.env.PORT,
   node_env: process.env.NODE_ENV,
-  jwt: {},
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  },
 };
