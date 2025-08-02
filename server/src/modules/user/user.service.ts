@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { jwtHelper } from "../../helper/JwtHelper";
 import config from "../../config";
 
+// register user
 const createUser = async (payload: IUser) => {
   const user = await User.findOne({ email: payload.email });
 
@@ -43,8 +44,15 @@ const loginUser = async ({ email, password }: IUserLogin) => {
   }
 
   // generate jwt token
+
+  const tokenPayload = {
+    userId: user._id.toString(),
+    email: user.email,
+    userName: user.userName,
+  };
+
   const accessToken = jwtHelper.generateToken(
-    user._id.toString(),
+    tokenPayload,
     config.jwt.secret as string,
     config.jwt.expiresIn as string
   );
@@ -61,4 +69,15 @@ const loginUser = async ({ email, password }: IUserLogin) => {
   };
 };
 
-export const userService = { createUser, loginUser };
+// my profile
+
+const myProfile = async (userId: string) => {
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+  return user;
+};
+
+export const userService = { createUser, loginUser, myProfile };

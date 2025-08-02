@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import { RequestHandler, Request, Response } from "express";
 import { userService } from "./user.service";
 
+// register user
 const createUser: RequestHandler = async (req: Request, res: Response) => {
   const result = await userService.createUser(req.body);
 
@@ -14,6 +15,7 @@ const createUser: RequestHandler = async (req: Request, res: Response) => {
   });
 };
 
+// login user
 const loginUser: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const result = await userService.loginUser({ email, password });
@@ -37,4 +39,18 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
   });
 };
 
-export const userControllers = { createUser, loginUser };
+// get user profile
+
+const myProfile = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+ 
+  const result = await userService.myProfile(userId);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "User profile fetched successfully",
+    data: result,
+  });
+};
+
+export const userControllers = { createUser, loginUser, myProfile };
