@@ -27,6 +27,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // set to true in production
     maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 
   res.status(httpStatus.OK).json({
@@ -43,7 +44,7 @@ const loginUser: RequestHandler = async (req: Request, res: Response) => {
 
 const myProfile = async (req: Request, res: Response) => {
   const { userId } = req.user;
- 
+
   const result = await userService.myProfile(userId);
 
   res.status(httpStatus.OK).json({
@@ -53,4 +54,22 @@ const myProfile = async (req: Request, res: Response) => {
   });
 };
 
-export const userControllers = { createUser, loginUser, myProfile };
+// get all users
+const getAllUsers: RequestHandler = async (req: Request, res: Response) => {
+  
+
+  const result = await userService.getAllUsers();
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Users fetched successfully",
+    data: result,
+  });
+};
+
+export const userControllers = {
+  createUser,
+  loginUser,
+  myProfile,
+  getAllUsers,
+};

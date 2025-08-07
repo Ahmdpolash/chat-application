@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";
 
-const chatModel = new mongoose.Schema(
+const conversationModel = new mongoose.Schema(
   {
     chatName: {
       type: String,
@@ -34,6 +34,6 @@ const chatModel = new mongoose.Schema(
   }
 );
 
-const Chat = mongoose.model("Chat", chatModel);
+const Conversation = mongoose.model("Conversation", conversationModel);
 
-export default Chat;
+export default Conversation;

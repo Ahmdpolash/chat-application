@@ -72,7 +72,6 @@ const loginUser = async ({ email, password }: IUserLogin) => {
 // my profile
 
 const myProfile = async (userId: string) => {
-
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
@@ -80,4 +79,12 @@ const myProfile = async (userId: string) => {
   return user;
 };
 
-export const userService = { createUser, loginUser, myProfile };
+// get all users
+
+const getAllUsers = async () => {
+  // const filter = userId ? { _id: { $ne: userId } } : {};
+  const users = await User.find();
+  return users;
+};
+
+export const userService = { createUser, loginUser, myProfile, getAllUsers };
