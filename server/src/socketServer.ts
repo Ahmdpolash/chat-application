@@ -13,43 +13,49 @@ export const initSocketServer = (server: http.Server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
+    console.log(`a user is connected ${socket.id}`);
 
+    // user joined room
+    socket.on("join", (userId: string) => {
+      socket.join(userId);
+      console.log(`User ${userId} joined room`);
+    });
+
+    // user left room
+    socket.on("leave", (userId: string) => {
+      socket.leave(userId);
+      console.log(`User ${userId} left room`);
+    });
+
+    // send msg
     socket.on("sendMessage", async (payload: IMessage) => {
+      const { sender, receiver, message } = payload;
+
+      if (!sender || !receiver || !message) {
+        return console.error("Invalid message payload");
+      }
+
       try {
-        const message = await Message.create(payload);
+        const createdMessage: IMessage = await Message.create({
+          sender,
+          receiver,
+          message,
+        });
 
-        // emit to the receiver only (private message)
-        io.to(payload.receiver).emit("receiveMessage", message);
-
-        // optionally sender keo emit korte paro
-        io.to(payload.sender).emit("receiveMessage", message);
+        // emit message to receiver
+        io.to(payload.receiver.toString()).emit(
+          "receiveMessage",
+          createdMessage
+        );
+        io.to(payload.sender.toString()).emit("receiveMessage", createdMessage);
       } catch (error) {
         console.error("Message send error:", error);
       }
     });
 
-    socket.on("join", (userId) => {
-      socket.join(userId); // userId মানে ekta unique room
-      console.log(`User ${userId} joined room: ${userId}`);
-    });
-
-    // receive message event
-    socket.on("receiveMessage", (message) => {});
-
-    // typing
-    socket.on("typing", ({ to }) => {
-      socket.to(to).emit("typing");
-    });
-
-    // stop typing
-    socket.on("stopTyping", ({ to }) => {
-      socket.to(to).emit("stopTyping");
-    });
-
-    // socket disconnect event
+    // user disconnected
     socket.on("disconnect", () => {
-      console.log("A user disconnected:", socket.id);
+      console.log(`user disconnected ${socket.id}`);
     });
   });
 };

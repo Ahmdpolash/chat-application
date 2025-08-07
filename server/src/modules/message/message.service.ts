@@ -27,7 +27,9 @@ const getMessages = async (userId1: string, userId2: string) => {
       { sender: userId1, receiver: userId2 },
       { sender: userId2, receiver: userId1 },
     ],
-  }).sort({ createdAt: 1 });
+  })
+    .sort({ createdAt: 1 })
+    .lean();
 };
 
 export const messageServices = {

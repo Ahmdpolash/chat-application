@@ -56,13 +56,22 @@ const myProfile = async (req: Request, res: Response) => {
 
 // get all users
 const getAllUsers: RequestHandler = async (req: Request, res: Response) => {
-  
-
-  const result = await userService.getAllUsers();
+  const { userId } = req.user;
+  const result = await userService.getAllUsers(userId);
 
   res.status(httpStatus.OK).json({
     success: true,
     message: "Users fetched successfully",
+    data: result,
+  });
+};
+
+//get single user
+const getSingleUser: RequestHandler = async (req: Request, res: Response) => {
+  const result = await userService.getSingleUser(req.params.userId);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "User fetched successfully",
     data: result,
   });
 };
@@ -72,4 +81,5 @@ export const userControllers = {
   loginUser,
   myProfile,
   getAllUsers,
+  getSingleUser,
 };

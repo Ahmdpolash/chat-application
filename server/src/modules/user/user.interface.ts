@@ -8,6 +8,8 @@ export interface IUser {
   password: string;
   avatar?: string;
   socketId?: string;
+  isOnline?: boolean;
+  lastSeen?: Date;
 }
 
 export interface IUserLogin {

@@ -81,10 +81,21 @@ const myProfile = async (userId: string) => {
 
 // get all users
 
-const getAllUsers = async () => {
-  // const filter = userId ? { _id: { $ne: userId } } : {};
-  const users = await User.find();
-  return users;
+const getAllUsers = async (userId: string) => {
+  const result = await User.find({ _id: { $ne: userId } });
+  return result;
 };
 
-export const userService = { createUser, loginUser, myProfile, getAllUsers };
+//single user
+const getSingleUser = (userId: string) => {
+  const result = User.findOne({ _id: userId });
+  return result;
+};
+
+export const userService = {
+  createUser,
+  loginUser,
+  myProfile,
+  getAllUsers,
+  getSingleUser,
+};

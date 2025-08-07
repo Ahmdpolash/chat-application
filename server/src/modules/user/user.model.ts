@@ -27,6 +27,14 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    lastSeen: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
