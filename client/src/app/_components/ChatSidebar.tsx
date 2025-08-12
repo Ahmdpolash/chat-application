@@ -64,7 +64,7 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
         {/* Active user avatars */}
         <div className="flex items-center gap-2 mb-3 overflow-x-auto">
           {/* Example avatar */}
-          <div className="relative cursor-pointer">
+          <div className="relative cursor-pointer flex items-center gap-3">
             {data?.data?.map((item: any, idx: number) => (
               <div key={idx}>
                 <img

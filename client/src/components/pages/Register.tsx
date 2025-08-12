@@ -29,13 +29,20 @@ const Register = () => {
   useEffect(() => {
     if (isSuccess) {
       const loginData = { email: form.email, password: form.password };
-      login(loginData);
-      toast.success("Account created successfully");
 
-      // Redirect or show success message
-      router.push("/");
+      // Wait for login mutation to complete
+      login(loginData)
+        .unwrap()
+        .then(() => {
+          toast.success("Account created successfully");
+          router.push("/");
+        })
+        .catch((error: any) => {
+          toast.error(error.data.message);
+          // Optionally redirect to login or stay on the page
+        });
     }
-  }, [isSuccess, data]);
+  }, [isSuccess]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,48 +55,88 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center ">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 ">
       <form
         onSubmit={handleSubmit}
-        className="dark:bg-gray-800 bg-white p-8 rounded border shadow-md flex flex-col gap-4 min-w-[450px]"
+        className="dark:bg-gray-800 bg-white p-6 rounded-xl shadow-lg  gap- w-full max-w-md border border-gray-200 dark:border-gray-700 "
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
-        <input
-          type="text"
-          name="userName"
-          placeholder="Name"
-          value={form.userName}
-          onChange={handleChange}
-          className="border border-slate-400 p-2 rounded"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="border border-slate-400 p-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="border border-slate-400 p-2 rounded"
-          required
-        />
+        <div>
+          <h2 className="text-3xl font-bold  text-center mb-1">Register</h2>
+          <p className="text-center text-gray-600 dark:text-gray-300 text-sm mb-3">
+            Create an account to start chatting with others
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-y-2 mb-2">
+          <label
+            htmlFor="userName"
+            className="block text-sm font-medium text-gray-600 dark:text-gray-300 pl-1"
+          >
+            Name
+          </label>
+          <input
+            type="text"
+            name="userName"
+            placeholder="Name"
+            value={form.userName}
+            onChange={handleChange}
+            className="border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-y-2 mb-2">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-600 dark:text-gray-300 pl-1"
+          >
+            Email
+          </label>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-y-2 ">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-600 dark:text-gray-300 pl-1"
+          >
+            Password
+          </label>
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            required
+          />
+        </div>
         <button
           type="submit"
-          className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold shadow-md transition-colors duration-200 cursor-pointer w-full my-3"
         >
           Register
         </button>
 
-        <span>
-          Already have an account? <Link href="/login">Login</Link>
+        <span className="text-sm  text-gray-600 dark:text-gray-300 pt-2">
+          Already have an account ?{" "}
+          <Link
+            href="/login"
+            className="text-blue-600 dark:text-blue-400 text-center mx-auto hover:underline font-medium pt-2"
+          >
+            Login
+          </Link>
         </span>
       </form>
     </div>

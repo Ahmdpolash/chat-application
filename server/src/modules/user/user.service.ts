@@ -25,7 +25,7 @@ const loginUser = async ({ email, password }: IUserLogin) => {
   // validate email and password
   if (!email || !password) {
     throw new AppError(
-      "Please provide email and password",
+      "Email and password are required",
       httpStatus.BAD_REQUEST
     );
   }
