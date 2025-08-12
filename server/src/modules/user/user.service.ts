@@ -87,8 +87,8 @@ const getAllUsers = async (userId: string) => {
 };
 
 //single user
-const getSingleUser = (userId: string) => {
-  const result = User.findOne({ _id: userId });
+const getSingleUser =async (userId: string) => {
+  const result = await User.findById(userId);
   return result;
 };
 

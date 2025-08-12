@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import ChatSidebar from "./ChatSidebar";
 import Conversation from "./Conversation";
-import socket from "@/lib/socket";
+
 
 const ChatPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -36,13 +36,20 @@ const ChatPage = () => {
     );
   }
 
+  // handle logout
+
+
+
   // socket
 
   //  Desktop Layout
   return (
     <div className="h-screen w-full grid grid-cols-1 md:grid-cols-4">
       <div className="col-span-1 border-r dark:border-gray-600 border-gray-200 bg-[#F5F7FB] dark:bg-[#101828] h-screen">
-        <ChatSidebar selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+        <ChatSidebar
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+        />
       </div>
 
       <div className="col-span-3 h-screen">

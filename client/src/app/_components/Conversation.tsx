@@ -35,7 +35,7 @@ const Conversation = ({ selectedUser, setSelectedUser }: any) => {
   });
 
   const { data: receiverInfo } = useGetSingleUserQuery(selectedUser);
-  console.log("receiverInfo", receiverInfo.data);
+  console.log("receiverInfo", receiverInfo);
   // state
   const [message, setMessage] = React.useState<IMessage[]>([]);
   const [inputMessage, setInputMessage] = React.useState("");

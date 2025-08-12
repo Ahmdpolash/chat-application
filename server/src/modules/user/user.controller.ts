@@ -76,10 +76,19 @@ const getSingleUser: RequestHandler = async (req: Request, res: Response) => {
   });
 };
 
+const logOut = async (req: Request, res: Response) => {
+  res.clearCookie("accessToken");
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+};
+
 export const userControllers = {
   createUser,
   loginUser,
   myProfile,
   getAllUsers,
   getSingleUser,
+  logOut,
 };

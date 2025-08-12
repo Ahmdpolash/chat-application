@@ -19,7 +19,11 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size={'icon'} variant="outline" className="w-10 h-8 cursor-pointer">
+        <Button
+          size={"icon"}
+          variant="outline"
+          className="w-10 h-8 cursor-pointer"
+        >
           <BsThreeDots size={33} className="text-2xl" />
         </Button>
       </DropdownMenuTrigger>

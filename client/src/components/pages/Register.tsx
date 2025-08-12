@@ -1,6 +1,9 @@
 "use client";
 
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import {
+  useRegisterMutation,
+  useLoginMutation,
+} from "@/redux/features/auth/authApi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +12,8 @@ import toast from "react-hot-toast";
 
 const Register = () => {
   const [register, { data, isSuccess }] = useRegisterMutation();
+  const [login] = useLoginMutation();
+
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -23,10 +28,12 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("Registration successful:", data);
-      toast.success("Registration successful!");
+      const loginData = { email: form.email, password: form.password };
+      login(loginData);
+      toast.success("Account created successfully");
+
       // Redirect or show success message
-      router.push("/login");
+      router.push("/");
     }
   }, [isSuccess, data]);
 
@@ -44,7 +51,7 @@ const Register = () => {
     <div className="h-screen flex items-center justify-center ">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded border shadow-md flex flex-col gap-4 min-w-[450px]"
+        className="dark:bg-gray-800 bg-white p-8 rounded border shadow-md flex flex-col gap-4 min-w-[450px]"
       >
         <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
         <input

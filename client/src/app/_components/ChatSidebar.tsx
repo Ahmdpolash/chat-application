@@ -4,12 +4,29 @@ import { useAppSelector } from "@/redux/hook";
 
 import { Edit, Search } from "lucide-react";
 import SidebarSkeleton from "./SidebarSkeleton";
-import { useGetMeQuery } from "@/redux/features/auth/authApi";
+import {
+  useGetMeQuery,
+  useLogOutMutation,
+} from "@/redux/features/auth/authApi";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
+  const [logOut, { isSuccess }] = useLogOutMutation();
   const { data: user }: any = useGetMeQuery({});
   const userInfo = user?.data;
   const { data, isLoading } = useGetAllUsersQuery({});
+
+  const handleLogout = () => {
+    logOut({});
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Logout successful!");
+      window.location.href = "/login";
+    }
+  }, [logOut, isSuccess]);
 
   return (
     <>
@@ -21,7 +38,11 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
             Chats
           </h1>
           <div className="flex items-center gap-3">
-            <Edit size={21} className="cursor-pointer" />
+            <Edit
+              onClick={() => handleLogout()}
+              size={21}
+              className="cursor-pointer"
+            />
             {/* <BsThreeDots size={24} className="cursor-pointer" /> */}
             <ModeToggle />
           </div>
