@@ -8,16 +8,27 @@ import {
   useGetMeQuery,
   useLogOutMutation,
 } from "@/redux/features/auth/authApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import socket from "@/lib/socket";
 
 const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
   const [logOut, { isSuccess }] = useLogOutMutation();
   const { data: user }: any = useGetMeQuery({});
   const userInfo = user?.data;
+
   const { data, isLoading } = useGetAllUsersQuery({});
+  const [users, setUsers] = useState([]);
+
+  // set all user into state
+  useEffect(() => {
+    if (data?.data) {
+      setUsers(data.data);
+    }
+  }, [data]);
 
   const handleLogout = () => {
+    socket.emit("leave", userInfo._id);
     logOut({});
   };
 
@@ -27,6 +38,24 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
       window.location.href = "/login";
     }
   }, [logOut, isSuccess]);
+
+  // Handle socket events for online status
+  useEffect(() => {
+    if (userInfo?._id) {
+      // Emit setOnlineStatus event when user is loaded
+      socket.emit("setOnlineStatus", userInfo._id);
+
+      // Listen for online users update
+      socket.on("onlineUsers", (updatedUsers) => {
+        setUsers(updatedUsers); // Update user list with online status
+      });
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off("onlineUsers");
+    };
+  }, [userInfo?._id]);
 
   return (
     <>
@@ -65,8 +94,8 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
         <div className="flex items-center gap-2 mb-3 overflow-x-auto">
           {/* Example avatar */}
           <div className="relative cursor-pointer flex items-center gap-3">
-            {data?.data?.map((item: any, idx: number) => (
-              <div key={idx}>
+            {users?.map((item: any, idx: number) => (
+              <div onClick={() => setSelectedUser(item?._id)} key={idx}>
                 <img
                   src={
                     item?.avatar
@@ -98,7 +127,7 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
         {isLoading && <SidebarSkeleton />}
 
         <div className="flex flex-col ">
-          {data?.data?.map((item: any, idx: number) => (
+          {users?.map((item: any, idx: number) => (
             <div
               key={idx}
               onClick={() => setSelectedUser(item?._id)}
@@ -119,7 +148,7 @@ const ChatSidebar = ({ selectedUser, setSelectedUser }: any) => {
                   />
                   <div
                     className={`w-[10px] h-[10px] rounded-full  absolute bottom-0 right-0 ${
-                      item?.isOnline ? "bg-green-400" : ""
+                      item?.isOnline ? "bg-green-400" : "bg-gray-50/50"
                     }`}
                   ></div>
                 </div>

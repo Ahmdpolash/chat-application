@@ -32,6 +32,8 @@ const getMessages = async (userId1: string, userId2: string) => {
     .lean();
 };
 
+
+
 export const messageServices = {
   createMessage,
   getMessages,
